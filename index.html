@@ -61,20 +61,19 @@
       opacity: .92;
     }
 
-    /* ===== APPLE-LIKE REVEAL ===== */
+    /* ===== REVEAL ===== */
     .reveal {
       opacity: 0;
       transform: translateY(60px);
       transition: opacity .9s ease,
                   transform .9s cubic-bezier(0.22,1,0.36,1);
     }
-
     .reveal.active {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ===== PHOTO SECTIONS ===== */
+    /* ===== PHOTO ===== */
     .bg-photo { background-size: cover; background-position: center; }
     .photo1 { background-image: url('photo1.jpg'); }
     .photo2 { background-image: url('photo2.jpg'); }
@@ -89,16 +88,14 @@
     /* ===== SECRET HEEL ===== */
     .heel {
       position: fixed;
-      bottom: -40px;              /* 👈 ПОДНЯЛИ */
+      bottom: -40px;
       left: 50%;
       transform: translateX(-50%);
       width: 70px;
       z-index: 1000;
       cursor: pointer;
-
       opacity: 0;
       pointer-events: none;
-
       transition: bottom .3s ease, opacity .3s ease;
     }
 
@@ -108,9 +105,7 @@
       animation: tease 4s ease-in-out infinite;
     }
 
-    .heel:hover {
-      bottom: -25px;              /* 👈 больше видно при тапе */
-    }
+    .heel:hover { bottom: -25px; }
 
     @keyframes tease {
       0%,100% { bottom: -40px; }
@@ -121,13 +116,13 @@
     .joke-panel {
       position: fixed;
       inset: 0;
-      background: rgba(5,5,10,0.92);
+      background: rgba(5,5,10,0.85);
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .4s ease;
+      transition: opacity .3s ease;
       z-index: 2000;
     }
 
@@ -137,13 +132,31 @@
     }
 
     .joke-content {
-      max-width: 420px;
-      width: 90%;
+      position: relative;
+      max-width: 320px; /* 👈 меньше */
+      width: 85%;
+    }
+
+    .close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
     }
 
     video {
       width: 100%;
-      border-radius: 18px;
+      border-radius: 16px;
       background: #000;
     }
   </style>
@@ -151,7 +164,6 @@
 
 <body>
 
-  <!-- INTRO -->
   <section>
     <div class="content reveal">
       <h1>✨ С Днём рождения</h1>
@@ -186,7 +198,6 @@
     </div>
   </section>
 
-  <!-- FAKE END -->
   <section id="end">
     <div class="content reveal">
       <h2>🎬 Конец</h2>
@@ -194,12 +205,13 @@
     </div>
   </section>
 
-  <!-- SECRET HEEL -->
-  <img src="heel.png" class="heel" id="heel" alt="heel" onclick="showJoke()">
+  <!-- HEEL -->
+  <img src="heel.png" class="heel" id="heel" onclick="showJoke()" alt="heel">
 
   <!-- JOKE VIDEO -->
   <div class="joke-panel" id="jokePanel">
     <div class="joke-content">
+      <div class="close" onclick="closeJoke()">✕</div>
       <video id="jokeVideo" controls playsinline>
         <source src="joke.mp4" type="video/mp4">
       </video>
@@ -207,23 +219,24 @@
   </div>
 
   <script>
-    /* reveal animation */
+    /* always start from top */
+    window.onbeforeunload = () => window.scrollTo(0, 0);
+
+    /* reveal */
     const reveals = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver(entries => {
       entries.forEach(e => e.target.classList.toggle('active', e.isIntersecting));
     }, { threshold: 0.35 });
     reveals.forEach(el => revealObserver.observe(el));
 
-    /* show heel only at bottom */
+    /* heel only at bottom */
     const heel = document.getElementById('heel');
     const end = document.getElementById('end');
-
     const heelObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         heel.classList.toggle('show', entry.isIntersecting);
       });
     }, { threshold: 0.6 });
-
     heelObserver.observe(end);
 
     function showJoke() {
@@ -231,6 +244,14 @@
       const video = document.getElementById('jokeVideo');
       panel.classList.add('show');
       video.play();
+    }
+
+    function closeJoke() {
+      const panel = document.getElementById('jokePanel');
+      const video = document.getElementById('jokeVideo');
+      video.pause();
+      video.currentTime = 0;
+      panel.classList.remove('show');
     }
   </script>
 
