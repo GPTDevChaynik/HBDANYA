@@ -10,17 +10,27 @@
     * { box-sizing: border-box; }
 
     html {
-      background-color: #090a0f; /* 🔥 убирает белый флеш */
+      height: 100%;
+      background: #090a0f;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top, #1b2735, #090a0f 70%);
       color: #fff;
       padding-top: env(safe-area-inset-top);
-      overscroll-behavior: none;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* 🔥 FAKE BACKGROUND FOR SAFE-AREA */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, #1b2735, #090a0f 70%);
+      z-index: -1;
     }
 
     section {
@@ -31,15 +41,13 @@
       padding: 40px 20px;
       text-align: center;
       position: relative;
-      overflow: hidden;
     }
 
     .content {
       max-width: 520px;
-      z-index: 1;
     }
 
-    /* ===== GLASS HEADERS ===== */
+    /* ===== HEADERS ===== */
     h1, h2 {
       display: inline-block;
       padding: 12px 22px;
@@ -51,13 +59,9 @@
         rgba(255,255,255,0.06)
       );
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       box-shadow:
         0 0 25px rgba(120,180,255,0.35),
         0 12px 30px rgba(0,0,0,0.45);
-      text-shadow:
-        0 0 14px rgba(150,210,255,0.9),
-        0 2px 8px rgba(0,0,0,0.85);
     }
 
     h1 { font-size: 2.3rem; }
@@ -65,60 +69,51 @@
 
     p {
       font-size: 1.15rem;
-      line-height: 1.6;
       opacity: .92;
+      line-height: 1.6;
     }
 
     /* ===== REVEAL ===== */
     .reveal {
       opacity: 0;
       transform: translateY(60px);
-      transition: opacity .9s ease,
-                  transform .9s cubic-bezier(0.22,1,0.36,1);
+      transition: 0.9s cubic-bezier(0.22,1,0.36,1);
     }
+
     .reveal.active {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ===== PHOTO ===== */
-    .bg-photo { background-size: cover; background-position: center; }
-    .photo1 { background-image: url('photo1.jpg'); }
-    .photo2 { background-image: url('photo2.jpg'); }
-    .photo3 { background-image: url('photo3.jpg'); }
+    /* ===== BUTTON ===== */
+    button {
+      margin-top: 25px;
+      padding: 14px 28px;
+      border-radius: 30px;
+      border: none;
+      background: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
 
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,.55);
+    button:active {
+      transform: scale(0.96);
+      opacity: .85;
     }
 
     /* ===== VIDEO ===== */
     .video-wrapper {
+      display: none;
       margin-top: 25px;
       border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,.6);
-      display: none;
     }
 
     video {
       width: 100%;
       border-radius: 18px;
       background: #000;
-    }
-
-    button {
-      margin-top: 25px;
-      padding: 14px 28px;
-      border-radius: 30px;
-      border: none;
-      background: linear-gradient(135deg, #ffffff, #e6f0ff);
-      color: #090a0f;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
 
     /* ===== BACK TO TOP ===== */
@@ -131,46 +126,38 @@
       border-radius: 50%;
       background: rgba(255,255,255,0.18);
       backdrop-filter: blur(8px);
-      color: #fff;
-      font-size: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .3s ease;
-      z-index: 1200;
+      transition: opacity .3s;
     }
+
     .to-top.show {
       opacity: 1;
       pointer-events: auto;
     }
 
-    /* ===== SECRET HEEL ===== */
+    /* ===== HEEL ===== */
     .heel {
       position: fixed;
       bottom: -40px;
       left: 50%;
       transform: translateX(-50%);
       width: 70px;
-      z-index: 1000;
-      cursor: pointer;
       opacity: 0;
       pointer-events: none;
-      transition: bottom .3s ease, opacity .3s ease;
+      transition: opacity .3s ease, transform .15s ease;
     }
 
     .heel.show {
       opacity: 1;
       pointer-events: auto;
-      animation: tease 4s ease-in-out infinite;
     }
 
-    .heel:hover { bottom: -25px; }
-
-    @keyframes tease {
-      0%,100% { bottom: -40px; }
-      50% { bottom: -30px; }
+    .heel:active {
+      transform: translateX(-50%) scale(0.92);
     }
 
     /* ===== JOKE PANEL ===== */
@@ -183,8 +170,7 @@
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .3s ease;
-      z-index: 2000;
+      transition: opacity .3s;
     }
 
     .joke-panel.show {
@@ -193,9 +179,9 @@
     }
 
     .joke-content {
-      position: relative;
       max-width: 320px;
       width: 85%;
+      position: relative;
     }
 
     .close {
@@ -206,20 +192,16 @@
       height: 36px;
       border-radius: 50%;
       background: rgba(255,255,255,0.2);
-      color: #fff;
-      font-size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      backdrop-filter: blur(6px);
     }
   </style>
 </head>
 
 <body>
 
-  <!-- INTRO -->
   <section>
     <div class="content reveal">
       <h1>✨ С Днём рождения</h1>
@@ -227,50 +209,18 @@
     </div>
   </section>
 
-  <section class="bg-photo photo1">
-    <div class="overlay"></div>
-    <div class="content reveal">
-      <h2>💫 Желаю:</h2>
-      <p>Девочек красивых, денежек - жалкие 4 пачки(Каждую неделю)</p>
-    </div>
-  </section>
-
-  <section class="bg-photo photo2">
-    <div class="overlay"></div>
-    <div class="content reveal">
-      <h2>🚀 Не парься на счёт друзей</h2>
-      <p>
-        Тебе друзей искать не надо, ибо кто тебя знает - сам сделает всё возможное,
-        чтобы стать твоим другом!
-      </p>
-    </div>
-  </section>
-
-  <section class="bg-photo photo3">
-    <div class="overlay"></div>
-    <div class="content reveal">
-      <h2>🖤 Таких как ты - 1 на всю жизнь</h2>
-      <p>Как говориться - один на миллион!</p>
-    </div>
-  </section>
-
-  <!-- MAIN VIDEO -->
   <section>
     <div class="content reveal">
       <h2>🎬 И напоследок</h2>
-      <p>Нажми — это для тебя</p>
-
-      <button onclick="haptic(); showMainVideo()">▶️ Смотреть видео</button>
-
+      <button onclick="showMainVideo()">▶️ Смотреть видео</button>
       <div class="video-wrapper" id="mainVideoBox">
         <video id="mainVideo" controls playsinline>
-          <source src="video.mp4" type="video/mp4">
+          <source src="video.mp4">
         </video>
       </div>
     </div>
   </section>
 
-  <!-- FAKE END -->
   <section id="end">
     <div class="content reveal">
       <h2>🎬 Конец</h2>
@@ -278,42 +228,33 @@
     </div>
   </section>
 
-  <!-- BACK TO TOP -->
   <div class="to-top" id="toTop"
-       onclick="haptic(); window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+       onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
-  <!-- HEEL -->
-  <img src="heel.png" class="heel" id="heel" onclick="haptic(); showJoke()" alt="heel">
+  <img src="heel.png" class="heel" id="heel" onclick="showJoke()">
 
-  <!-- JOKE VIDEO -->
   <div class="joke-panel" id="jokePanel">
     <div class="joke-content">
-      <div class="close" onclick="haptic(); closeJoke()">✕</div>
+      <div class="close" onclick="closeJoke()">✕</div>
       <video id="jokeVideo" controls playsinline>
-        <source src="joke.mp4" type="video/mp4">
+        <source src="joke.mp4">
       </video>
     </div>
   </div>
 
   <script>
-    /* 🔥 start always from top (NO WHITE FLASH) */
-    document.addEventListener('DOMContentLoaded', () => {
-      window.scrollTo(0, 0);
+    /* MAX SCROLL RESET */
+    history.scrollRestoration = 'manual';
+    window.addEventListener('pageshow', () => {
+      requestAnimationFrame(() => window.scrollTo(0, 0));
     });
-
-    /* haptic feedback */
-    function haptic() {
-      if (window.navigator.vibrate) {
-        navigator.vibrate(10);
-      }
-    }
 
     /* reveal */
     const reveals = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver(entries => {
+    const observer = new IntersectionObserver(entries => {
       entries.forEach(e => e.target.classList.toggle('active', e.isIntersecting));
     }, { threshold: 0.35 });
-    reveals.forEach(el => revealObserver.observe(el));
+    reveals.forEach(el => observer.observe(el));
 
     /* back to top */
     const toTop = document.getElementById('toTop');
@@ -321,36 +262,28 @@
       toTop.classList.toggle('show', window.scrollY > 400);
     });
 
-    /* main video */
     function showMainVideo() {
       const box = document.getElementById('mainVideoBox');
       const video = document.getElementById('mainVideo');
       box.style.display = 'block';
       video.play();
-      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    /* heel only at bottom */
+    /* heel */
     const heel = document.getElementById('heel');
     const end = document.getElementById('end');
-    const heelObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) haptic();
-        heel.classList.toggle('show', entry.isIntersecting);
-      });
-    }, { threshold: 0.6 });
-    heelObserver.observe(end);
+    new IntersectionObserver(entries => {
+      heel.classList.toggle('show', entries[0].isIntersecting);
+    }, { threshold: 0.6 }).observe(end);
 
-    /* joke video */
     function showJoke() {
       document.getElementById('jokePanel').classList.add('show');
       document.getElementById('jokeVideo').play();
     }
 
     function closeJoke() {
-      const video = document.getElementById('jokeVideo');
-      video.pause();
-      video.currentTime = 0;
+      const v = document.getElementById('jokeVideo');
+      v.pause(); v.currentTime = 0;
       document.getElementById('jokePanel').classList.remove('show');
     }
   </script>
