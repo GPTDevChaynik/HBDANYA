@@ -7,6 +7,7 @@
 
 <style>
 *{box-sizing:border-box}
+
 html,body{
   margin:0;
   padding:0;
@@ -16,7 +17,9 @@ html,body{
   color:#fff;
   overflow-x:hidden;
 }
+
 body{padding-top:env(safe-area-inset-top)}
+
 body::before{
   content:"";
   position:fixed;
@@ -24,6 +27,9 @@ body::before{
   background:radial-gradient(circle at top,#1b2735,#090a0f 70%);
   z-index:-2;
 }
+
+/* ---------- LAYOUT ---------- */
+
 section{
   min-height:100vh;
   display:flex;
@@ -33,7 +39,11 @@ section{
   text-align:center;
   position:relative;
 }
+
 .content{max-width:520px;z-index:1}
+
+/* ---------- TEXT ---------- */
+
 h1,h2{
   display:inline-block;
   padding:14px 26px;
@@ -43,9 +53,17 @@ h1,h2{
   backdrop-filter:blur(10px);
   box-shadow:0 0 25px rgba(120,180,255,.35),0 12px 30px rgba(0,0,0,.45);
 }
+
 h1{font-size:2.3rem}
 h2{font-size:1.7rem}
-p{font-size:1.15rem;line-height:1.6;opacity:.92}
+
+p{
+  font-size:1.15rem;
+  line-height:1.6;
+  opacity:.92;
+}
+
+/* ---------- REVEAL ---------- */
 
 .reveal{
   opacity:0;
@@ -54,11 +72,20 @@ p{font-size:1.15rem;line-height:1.6;opacity:.92}
 }
 .reveal.active{opacity:1;transform:none}
 
+/* ---------- PHOTOS ---------- */
+
 .bg-photo{background-size:cover;background-position:center}
 .photo1{background-image:url('photo1.jpg')}
 .photo2{background-image:url('photo2.jpg');background-position:30% center}
 .photo3{background-image:url('photo3.jpg')}
-.overlay{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.55);
+}
+
+/* ---------- BUTTON ---------- */
 
 button{
   margin-top:25px;
@@ -75,15 +102,17 @@ button{
 }
 button:active{transform:scale(.96);opacity:.9}
 
+/* ---------- VIDEO ---------- */
+
 .video-holder{
   margin-top:25px;
   border-radius:18px;
   overflow:hidden;
   box-shadow:0 20px 40px rgba(0,0,0,.6);
+  display:none;
   opacity:0;
   transform:scale(.96);
   transition:.4s ease;
-  display:none;
 }
 .video-holder.show{
   display:block;
@@ -91,6 +120,8 @@ button:active{transform:scale(.96);opacity:.9}
   transform:scale(1);
 }
 video{width:100%;background:#000;border-radius:18px}
+
+/* ---------- UI ---------- */
 
 .music-toggle{
   position:fixed;
@@ -130,6 +161,8 @@ video{width:100%;background:#000;border-radius:18px}
 .to-top.show{opacity:1;pointer-events:auto}
 .to-top:active{transform:scale(.92)}
 
+/* ---------- HEEL ---------- */
+
 .heel{
   position:fixed;
   bottom:-40px;
@@ -138,16 +171,13 @@ video{width:100%;background:#000;border-radius:18px}
   width:70px;
   opacity:0;
   pointer-events:none;
-  transition:.3s ease;
+  transition:opacity .3s ease;
   z-index:1000;
+  cursor:pointer;
 }
 .heel.show{opacity:1;pointer-events:auto}
-.heel.expand{animation:heelExpand .8s cubic-bezier(.22,1,.36,1) forwards}
-@keyframes heelExpand{
-  0%{transform:translateX(-50%) scale(1)}
-  60%{transform:translateX(-50%) translateY(-120px) scale(3)}
-  100%{transform:translateX(-50%) translateY(-160px) scale(4)}
-}
+
+/* ---------- BACKDROP ---------- */
 
 .heel-backdrop{
   position:fixed;
@@ -158,6 +188,8 @@ video{width:100%;background:#000;border-radius:18px}
   z-index:1500;
 }
 .heel-backdrop.show{background:rgba(5,5,10,.55)}
+
+/* ---------- JOKE ---------- */
 
 .joke-panel{
   position:fixed;
@@ -172,7 +204,12 @@ video{width:100%;background:#000;border-radius:18px}
   z-index:2000;
 }
 .joke-panel.show{opacity:1;pointer-events:auto}
-.joke-content{width:85%;max-width:320px;position:relative}
+
+.joke-content{
+  width:85%;
+  max-width:320px;
+  position:relative;
+}
 .close{
   position:absolute;
   top:-14px;
@@ -229,7 +266,7 @@ video{width:100%;background:#000;border-radius:18px}
 </section>
 
 <section>
-  <div class="content reveal" id="mainBlock">
+  <div class="content reveal">
     <h2>🎬 И напоследок</h2>
     <p>Нажми — это для тебя</p>
     <button id="videoBtn">▶️ Смотреть видео</button>
@@ -252,11 +289,12 @@ video{width:100%;background:#000;border-radius:18px}
 <div class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
 <img src="heel.png" class="heel" id="heel">
+
 <div class="heel-backdrop" id="heelBackdrop"></div>
 
 <div class="joke-panel" id="jokePanel">
   <div class="joke-content">
-    <div class="close" onclick="closeJoke()">✕</div>
+    <div class="close" id="closeJoke">✕</div>
     <video id="jokeVideo" controls playsinline>
       <source src="joke.mp4" type="video/mp4">
     </video>
@@ -264,18 +302,22 @@ video{width:100%;background:#000;border-radius:18px}
 </div>
 
 <script>
+/* ---------- SCROLL RESET ---------- */
 history.scrollRestoration='manual';
 window.addEventListener('pageshow',()=>window.scrollTo(0,0));
 
+/* ---------- REVEAL ---------- */
 document.querySelectorAll('.reveal').forEach(el=>{
   new IntersectionObserver(e=>{
     e.forEach(x=>x.target.classList.toggle('active',x.isIntersecting))
   },{threshold:.35}).observe(el);
 });
 
+/* ---------- BACK TO TOP ---------- */
 const toTop=document.getElementById('toTop');
 window.addEventListener('scroll',()=>toTop.classList.toggle('show',window.scrollY>400));
 
+/* ---------- MUSIC ---------- */
 const music=document.getElementById('bgMusic');
 const toggle=document.getElementById('musicToggle');
 let musicStarted=false;
@@ -307,43 +349,58 @@ function fadeOutMusic(cb){
   },40);
 }
 
+/* ---------- MAIN VIDEO ---------- */
 document.getElementById('videoBtn').onclick=()=>{
   fadeOutMusic(()=>{
-    document.getElementById('videoBtn').style.display='none';
+    const btn=document.getElementById('videoBtn');
     const holder=document.getElementById('mainVideoHolder');
     const video=document.getElementById('mainVideo');
+    btn.style.display='none';
     holder.classList.add('show');
     video.play();
   });
 };
 
+/* ---------- HEEL LOGIC (FIXED) ---------- */
 const heel=document.getElementById('heel');
-new IntersectionObserver(e=>heel.classList.toggle('show',e[0].isIntersecting),{threshold:.6})
-.observe(document.getElementById('end'));
+const end=document.getElementById('end');
+const backdrop=document.getElementById('heelBackdrop');
 
-heel.onclick = () => {
-  // перезапуск анимации
-  heel.classList.remove('expand');
-  void heel.offsetWidth; // 👈 хак для перезапуска CSS animation
-  heel.classList.add('expand');
+new IntersectionObserver(e=>{
+  heel.classList.toggle('show',e[0].isIntersecting)
+},{threshold:.6}).observe(end);
 
-  document.getElementById('heelBackdrop').classList.add('show');
+heel.onclick=()=>{
+  /* ПРИНУДИТЕЛЬНО ПЕРЕСОЗДАЁМ АНИМАЦИЮ */
+  heel.style.animation='none';
+  heel.offsetHeight; // reflow
+  heel.style.animation='heelJump .8s cubic-bezier(.22,1,.36,1) forwards';
 
-  fadeOutMusic(() => {
-    const panel = document.getElementById('jokePanel');
-    const video = document.getElementById('jokeVideo');
-    panel.classList.add('show');
-    video.play();
+  backdrop.classList.add('show');
+
+  fadeOutMusic(()=>{
+    document.getElementById('jokePanel').classList.add('show');
+    document.getElementById('jokeVideo').play();
   });
 };
 
-function closeJoke(){
+/* inline keyframes (гарантированный запуск) */
+const style=document.createElement('style');
+style.textContent=`
+@keyframes heelJump{
+  0%{transform:translateX(-50%) scale(1)}
+  60%{transform:translateX(-50%) translateY(-120px) scale(3)}
+  100%{transform:translateX(-50%) translateY(-160px) scale(4)}
+}`;
+document.head.appendChild(style);
+
+/* ---------- CLOSE JOKE ---------- */
+document.getElementById('closeJoke').onclick=()=>{
   const v=document.getElementById('jokeVideo');
   v.pause();v.currentTime=0;
   document.getElementById('jokePanel').classList.remove('show');
-  document.getElementById('heelBackdrop').classList.remove('show');
-  heel.classList.remove('expand');
-}
+  backdrop.classList.remove('show');
+};
 </script>
 
 </body>
