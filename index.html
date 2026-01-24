@@ -6,16 +6,13 @@
   <title>С Днём рождения ✨</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: radial-gradient(circle at top, #1b2735, #090a0f 70%);
-      color: #ffffff;
-      scroll-behavior: smooth;
+      color: #fff;
     }
 
     section {
@@ -28,119 +25,116 @@
       position: relative;
     }
 
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-    }
-
     .content {
-      position: relative;
       max-width: 500px;
-      z-index: 1;
     }
 
-    h1, h2 {
+    h1 { font-size: 2.2rem; margin-bottom: 20px; }
+    h2 { font-size: 1.8rem; margin-bottom: 15px; }
+    p  { font-size: 1.15rem; line-height: 1.6; opacity: .9; }
+
+    button {
+      margin-top: 25px;
+      padding: 14px 28px;
+      border-radius: 30px;
+      border: none;
+      background: #fff;
+      color: #090a0f;
+      font-size: 1rem;
       font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      font-size: 1.8rem;
-      margin-bottom: 15px;
-    }
-
-    p {
-      font-size: 1.15rem;
-      line-height: 1.6;
-      opacity: 0.9;
-    }
-
-    .hint {
-      position: absolute;
-      bottom: 20px;
-      font-size: 0.9rem;
-      opacity: 0.6;
+      cursor: pointer;
     }
 
     .bg-photo {
       background-size: cover;
       background-position: center;
     }
-
-    /* фоновые фото */
     .photo1 { background-image: url('photo1.jpg'); }
     .photo2 { background-image: url('photo2.jpg'); }
     .photo3 { background-image: url('photo3.jpg'); }
 
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+    }
+
+    .video-wrapper {
+      margin-top: 25px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,.5);
+      display: none;
+    }
+
+    video {
+      width: 100%;
+      background: #000;
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- Старт -->
   <section>
     <div class="content">
       <h1>✨ С Днём рождения</h1>
-      <p>
-        Этот день — ещё одна звезда в твоей вселенной.  
-        Листай вниз — там немного тепла для тебя 💫
-      </p>
+      <p>Листай вниз — там самое важное</p>
     </div>
-    <div class="hint">⬇ пролистай</div>
   </section>
 
-  <!-- Пожелание 1 -->
   <section class="bg-photo photo1">
     <div class="overlay"></div>
     <div class="content">
       <h2>💫 Про мечты</h2>
-      <p>
-        Пусть у тебя всегда хватает смелости идти туда,  
-        куда хочется именно тебе.
-      </p>
+      <p>Пусть всегда будет куда стремиться.</p>
     </div>
   </section>
 
-  <!-- Пожелание 2 -->
   <section class="bg-photo photo2">
     <div class="overlay"></div>
     <div class="content">
       <h2>🚀 Про путь</h2>
-      <p>
-        Пусть каждый твой шаг ведёт к свету,  
-        даже если дорога иногда темная.
-      </p>
+      <p>Даже в темноте ты знаешь направление.</p>
     </div>
   </section>
 
-  <!-- Пожелание 3 -->
   <section class="bg-photo photo3">
     <div class="overlay"></div>
     <div class="content">
       <h2>🖤 Про нас</h2>
-      <p>
-        Спасибо за моменты, за смех и за настоящее.  
-        Пусть впереди будет ещё больше.
-      </p>
+      <p>Спасибо за настоящее.</p>
     </div>
   </section>
 
   <!-- Финал -->
   <section>
     <div class="content">
-      <h2>🎂 С Днём рождения</h2>
-      <p>
-        Пусть твоя вселенная будет тёплой.  
-        И пусть в ней всегда будет место для счастья ✨
-      </p>
+      <h2>🎬 И напоследок</h2>
+      <p>Нажми — это для тебя</p>
+
+      <button onclick="showVideo()">▶️ Смотреть видео</button>
+
+      <div class="video-wrapper" id="videoBox">
+        <video id="finalVideo" controls playsinline>
+          <source src="video.mp4" type="video/mp4">
+        </video>
+      </div>
     </div>
   </section>
+
+  <script>
+    function showVideo() {
+      const box = document.getElementById('videoBox');
+      const video = document.getElementById('finalVideo');
+
+      box.style.display = 'block';
+      video.muted = false;
+      video.play();
+
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
 
 </body>
 </html>
