@@ -61,18 +61,20 @@
       opacity: .92;
     }
 
-    /* ===== REVEAL ===== */
+    /* ===== APPLE-LIKE REVEAL ===== */
     .reveal {
       opacity: 0;
       transform: translateY(60px);
-      transition: opacity .9s ease, transform .9s cubic-bezier(0.22,1,0.36,1);
+      transition: opacity .9s ease,
+                  transform .9s cubic-bezier(0.22,1,0.36,1);
     }
+
     .reveal.active {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ===== PHOTO ===== */
+    /* ===== PHOTO SECTIONS ===== */
     .bg-photo { background-size: cover; background-position: center; }
     .photo1 { background-image: url('photo1.jpg'); }
     .photo2 { background-image: url('photo2.jpg'); }
@@ -87,7 +89,7 @@
     /* ===== SECRET HEEL ===== */
     .heel {
       position: fixed;
-      bottom: -40px;
+      bottom: -40px;              /* 👈 ПОДНЯЛИ */
       left: 50%;
       transform: translateX(-50%);
       width: 70px;
@@ -97,9 +99,7 @@
       opacity: 0;
       pointer-events: none;
 
-      transition:
-        bottom .3s ease,
-        opacity .3s ease;
+      transition: bottom .3s ease, opacity .3s ease;
     }
 
     .heel.show {
@@ -109,12 +109,12 @@
     }
 
     .heel:hover {
-      bottom: -25px;
+      bottom: -25px;              /* 👈 больше видно при тапе */
     }
 
     @keyframes tease {
-      0%,100% { bottom: -55px; }
-      50% { bottom: -45px; }
+      0%,100% { bottom: -40px; }
+      50% { bottom: -30px; }
     }
 
     /* ===== JOKE PANEL ===== */
@@ -151,6 +151,7 @@
 
 <body>
 
+  <!-- INTRO -->
   <section>
     <div class="content reveal">
       <h1>✨ С Днём рождения</h1>
@@ -185,6 +186,7 @@
     </div>
   </section>
 
+  <!-- FAKE END -->
   <section id="end">
     <div class="content reveal">
       <h2>🎬 Конец</h2>
@@ -192,10 +194,10 @@
     </div>
   </section>
 
-  <!-- HEEL -->
+  <!-- SECRET HEEL -->
   <img src="heel.png" class="heel" id="heel" alt="heel" onclick="showJoke()">
 
-  <!-- JOKE -->
+  <!-- JOKE VIDEO -->
   <div class="joke-panel" id="jokePanel">
     <div class="joke-content">
       <video id="jokeVideo" controls playsinline>
@@ -205,14 +207,14 @@
   </div>
 
   <script>
-    /* reveal */
+    /* reveal animation */
     const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver(entries => {
+    const revealObserver = new IntersectionObserver(entries => {
       entries.forEach(e => e.target.classList.toggle('active', e.isIntersecting));
     }, { threshold: 0.35 });
-    reveals.forEach(el => observer.observe(el));
+    reveals.forEach(el => revealObserver.observe(el));
 
-    /* heel show only at bottom */
+    /* show heel only at bottom */
     const heel = document.getElementById('heel');
     const end = document.getElementById('end');
 
