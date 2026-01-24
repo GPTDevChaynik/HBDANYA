@@ -2,26 +2,24 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>С Днём рождения ✨</title>
 
   <style>
     * { box-sizing: border-box; }
 
-    html {
-      height: 100%;
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #fff;
       background: #090a0f;
+      overflow-x: hidden;
     }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      color: #fff;
       padding-top: env(safe-area-inset-top);
-      overflow-x: hidden;
-      position: relative;
     }
 
     body::before {
@@ -52,15 +50,9 @@
       padding: 14px 26px;
       border-radius: 18px;
       margin-bottom: 18px;
-      background: linear-gradient(
-        135deg,
-        rgba(255,255,255,0.22),
-        rgba(255,255,255,0.06)
-      );
+      background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.06));
       backdrop-filter: blur(10px);
-      box-shadow:
-        0 0 25px rgba(120,180,255,0.35),
-        0 12px 30px rgba(0,0,0,0.45);
+      box-shadow: 0 0 25px rgba(120,180,255,.35), 0 12px 30px rgba(0,0,0,.45);
     }
 
     h1 { font-size: 2.3rem; }
@@ -75,9 +67,9 @@
     .reveal {
       opacity: 0;
       transform: translateY(60px);
-      transition: opacity .9s ease,
-                  transform .9s cubic-bezier(0.22,1,0.36,1);
+      transition: opacity .9s ease, transform .9s cubic-bezier(.22,1,.36,1);
     }
+
     .reveal.active {
       opacity: 1;
       transform: translateY(0);
@@ -87,17 +79,16 @@
       background-size: cover;
       background-position: center;
     }
+
     .photo1 { background-image: url('photo1.jpg'); }
-    .photo2 {
-      background-image: url('photo2.jpg');
-      background-position: 30% center; /* учтено */
-    }
+    .photo2 { background-image: url('photo2.jpg'); background-position: 30% center; }
     .photo3 { background-image: url('photo3.jpg'); }
 
     .overlay {
       position: absolute;
       inset: 0;
       background: rgba(0,0,0,.55);
+      z-index: 0;
     }
 
     button {
@@ -105,17 +96,17 @@
       padding: 16px 34px;
       border-radius: 30px;
       border: none;
-      background: linear-gradient(135deg, #ffffff, #e6f0ff);
+      background: linear-gradient(135deg, #fff, #e6f0ff);
       color: #090a0f;
       font-size: 1.05rem;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.45);
+      box-shadow: 0 10px 24px rgba(0,0,0,.45);
       transition: transform .15s ease, opacity .15s ease;
     }
 
     button:active {
-      transform: scale(0.96);
+      transform: scale(.96);
       opacity: .9;
     }
 
@@ -140,13 +131,12 @@
       width: 46px;
       height: 46px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,.18);
       backdrop-filter: blur(8px);
-      color: #fff;
-      font-size: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 22px;
       opacity: 0;
       pointer-events: none;
       transition: opacity .3s ease, transform .15s ease;
@@ -159,8 +149,8 @@
     }
 
     .to-top:active {
-      transform: scale(0.92);
-      box-shadow: inset 0 0 12px rgba(255,255,255,0.35);
+      transform: scale(.92);
+      box-shadow: inset 0 0 12px rgba(255,255,255,.35);
     }
 
     .music-toggle {
@@ -170,14 +160,14 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,.18);
       backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 20px;
-      cursor: pointer;
       z-index: 1200;
+      cursor: pointer;
     }
 
     .heel {
@@ -187,10 +177,10 @@
       transform: translateX(-50%);
       width: 70px;
       z-index: 1000;
-      cursor: pointer;
       opacity: 0;
       pointer-events: none;
       transition: opacity .3s ease;
+      cursor: pointer;
     }
 
     .heel.show {
@@ -199,12 +189,12 @@
     }
 
     .heel.expand {
-      animation: heelExpand .8s cubic-bezier(0.22,1,0.36,1) forwards;
+      animation: heelExpand .8s cubic-bezier(.22,1,.36,1) forwards;
     }
 
     @keyframes heelExpand {
-      0%   { transform: translateX(-50%) scale(1); }
-      60%  { transform: translateX(-50%) translateY(-120px) scale(3); }
+      0% { transform: translateX(-50%) scale(1); }
+      60% { transform: translateX(-50%) translateY(-120px) scale(3); }
       100% { transform: translateX(-50%) translateY(-160px) scale(4); }
     }
 
@@ -216,14 +206,15 @@
       pointer-events: none;
       z-index: 1500;
     }
+
     .heel-backdrop.show {
-      background: rgba(5,5,10,0.55);
+      background: rgba(5,5,10,.55);
     }
 
     .joke-panel {
       position: fixed;
       inset: 0;
-      background: rgba(5,5,10,0.85);
+      background: rgba(5,5,10,.85);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -251,7 +242,7 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,.2);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -268,84 +259,131 @@
 
 <div class="music-toggle" id="musicToggle">🔊</div>
 
-<!-- SECTIONS (без изменений) -->
-<!-- ... весь HTML секций тот же, что у тебя сейчас ... -->
+<section>
+  <div class="content reveal">
+    <h1>✨ С Днём рождения</h1>
+    <p>Листай вниз — там самое важное</p>
+  </div>
+</section>
+
+<section class="bg-photo photo1">
+  <div class="overlay"></div>
+  <div class="content reveal">
+    <h2>💫 Желаю:</h2>
+    <p>Девочек красивых, денежек - жалкие 4 пачки(Каждую неделю)</p>
+  </div>
+</section>
+
+<section class="bg-photo photo2">
+  <div class="overlay"></div>
+  <div class="content reveal">
+    <h2>🚀 Не парься на счёт друзей</h2>
+    <p>Тебе друзей искать не надо, ибо кто тебя знает - сам сделает всё возможное, чтобы стать твоим другом!</p>
+  </div>
+</section>
+
+<section class="bg-photo photo3">
+  <div class="overlay"></div>
+  <div class="content reveal">
+    <h2>🖤 Таких как ты - 1 на всю жизнь</h2>
+    <p>Как говориться - один на миллион!</p>
+  </div>
+</section>
+
+<section>
+  <div class="content reveal">
+    <h2>🎬 И напоследок</h2>
+    <p>Нажми — это для тебя</p>
+    <button onclick="showMainVideo()">▶️ Смотреть видео</button>
+    <div class="video-wrapper" id="mainVideoBox">
+      <video id="mainVideo" controls playsinline>
+        <source src="video.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+<section id="end">
+  <div class="content reveal">
+    <h2>🎬 Конец</h2>
+    <p>Кажется, это всё 🙂</p>
+  </div>
+</section>
+
+<div class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<img src="heel.png" class="heel" id="heel" onclick="showJoke()">
+
+<div class="heel-backdrop" id="heelBackdrop"></div>
+
+<div class="joke-panel" id="jokePanel">
+  <div class="joke-content">
+    <div class="close" onclick="closeJoke()">✕</div>
+    <video id="jokeVideo" controls playsinline>
+      <source src="joke.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
 
 <script>
   history.scrollRestoration = 'manual';
-  window.addEventListener('pageshow', () => {
-    requestAnimationFrame(() => window.scrollTo(0, 0));
-  });
+  window.addEventListener('pageshow', () => requestAnimationFrame(() => window.scrollTo(0,0)));
 
-  /* reveal */
-  document.querySelectorAll('.reveal').forEach(el => {
-    new IntersectionObserver(e =>
-      e.forEach(x => x.target.classList.toggle('active', x.isIntersecting)),
-      { threshold: .35 }
-    ).observe(el);
-  });
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(e => e.forEach(x => x.target.classList.toggle('active', x.isIntersecting)), {threshold:.35});
+  reveals.forEach(el => io.observe(el));
 
-  /* back to top */
   const toTop = document.getElementById('toTop');
-  window.addEventListener('scroll', () => {
-    toTop.classList.toggle('show', window.scrollY > 400);
-  });
+  window.addEventListener('scroll', () => toTop.classList.toggle('show', window.scrollY > 400));
 
-  /* MUSIC */
   const music = document.getElementById('bgMusic');
   const toggle = document.getElementById('musicToggle');
   let musicStarted = false;
 
-  function startMusic() {
+  window.addEventListener('scroll', () => {
     if (!musicStarted) {
       music.volume = 0.2;
       music.play().catch(()=>{});
       musicStarted = true;
     }
-  }
-  window.addEventListener('scroll', startMusic, { once:true });
+  }, { once:true });
+
+  toggle.onclick = () => {
+    if (music.paused) { music.play(); toggle.textContent='🔊'; }
+    else { music.pause(); toggle.textContent='🔇'; }
+  };
 
   function fadeOutMusic(cb) {
     let v = music.volume;
-    const fade = setInterval(() => {
+    const i = setInterval(() => {
       v -= 0.02;
       if (v <= 0) {
+        clearInterval(i);
         music.pause();
         music.volume = 0.2;
-        clearInterval(fade);
         cb && cb();
-      } else {
-        music.volume = v;
-      }
+      } else music.volume = v;
     }, 40);
   }
 
-  toggle.onclick = () => {
-    if (music.paused) {
-      music.play();
-      toggle.textContent = '🔊';
-    } else {
-      music.pause();
-      toggle.textContent = '🔇';
-    }
-  };
-
-  /* MAIN VIDEO */
   function showMainVideo() {
     fadeOutMusic(() => {
       const box = document.getElementById('mainVideoBox');
       const video = document.getElementById('mainVideo');
-      box.style.display = 'block';
+      box.style.display='block';
       video.play();
-      box.scrollIntoView({ behavior:'smooth', block:'center' });
+      box.scrollIntoView({behavior:'smooth', block:'center'});
     });
   }
 
-  /* HEEL VIDEO */
-  function showJoke() {
-    document.getElementById('heel').classList.add('expand');
-    document.getElementById('heelBackdrop').classList.add('show');
+  const heel = document.getElementById('heel');
+  const end = document.getElementById('end');
 
+  new IntersectionObserver(e => heel.classList.toggle('show', e[0].isIntersecting), {threshold:.6}).observe(end);
+
+  function showJoke() {
+    heel.classList.add('expand');
+    document.getElementById('heelBackdrop').classList.add('show');
     fadeOutMusic(() => {
       document.getElementById('jokePanel').classList.add('show');
       document.getElementById('jokeVideo').play();
@@ -357,7 +395,7 @@
     v.pause(); v.currentTime = 0;
     document.getElementById('jokePanel').classList.remove('show');
     document.getElementById('heelBackdrop').classList.remove('show');
-    document.getElementById('heel').classList.remove('expand');
+    heel.classList.remove('expand');
   }
 </script>
 
