@@ -68,25 +68,21 @@
       opacity: .92;
     }
 
-    /* ===== APPLE-LIKE REVEAL ===== */
+    /* ===== REVEAL ===== */
     .reveal {
       opacity: 0;
       transform: translateY(60px);
       transition:
-        opacity 0.9s ease,
-        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        opacity .9s ease,
+        transform .9s cubic-bezier(0.22, 1, 0.36, 1);
     }
-
     .reveal.active {
       opacity: 1;
       transform: translateY(0);
     }
 
     /* ===== PHOTO SECTIONS ===== */
-    .bg-photo {
-      background-size: cover;
-      background-position: center;
-    }
+    .bg-photo { background-size: cover; background-position: center; }
     .photo1 { background-image: url('photo1.jpg'); }
     .photo2 { background-image: url('photo2.jpg'); }
     .photo3 { background-image: url('photo3.jpg'); }
@@ -106,10 +102,7 @@
       display: none;
     }
 
-    video {
-      width: 100%;
-      background: #000;
-    }
+    video { width: 100%; background: #000; }
 
     button {
       margin-top: 25px;
@@ -134,7 +127,6 @@
       border-radius: 50%;
       background: rgba(255,255,255,0.18);
       backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
       color: #fff;
       font-size: 20px;
       display: flex;
@@ -142,10 +134,9 @@
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity .3s ease;
       z-index: 999;
     }
-
     .to-top.show {
       opacity: 1;
       pointer-events: auto;
@@ -155,6 +146,7 @@
 
 <body>
 
+  <!-- INTRO -->
   <section>
     <div class="content reveal">
       <h1>✨ С Днём рождения</h1>
@@ -189,12 +181,13 @@
     </div>
   </section>
 
+  <!-- MAIN VIDEO -->
   <section>
     <div class="content reveal">
       <h2>🎬 И напоследок</h2>
       <p>Нажми — это для тебя</p>
 
-      <button onclick="showVideo()">▶️ Смотреть видео</button>
+      <button onclick="showVideo('videoBox','finalVideo')">▶️ Смотреть видео</button>
 
       <div class="video-wrapper" id="videoBox">
         <video id="finalVideo" controls playsinline>
@@ -204,10 +197,23 @@
     </div>
   </section>
 
-  <!-- BACK TO TOP -->
-  <div class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-    ↑
-  </div>
+  <!-- JOKE VIDEO -->
+  <section>
+    <div class="content reveal">
+      <h2>😏 Ну и ещё кое-что</h2>
+      <p>Это можно было и не смотреть… но ты же досмотрел 😄</p>
+
+      <button onclick="showVideo('jokeBox','jokeVideo')">▶️ Ладно, жми</button>
+
+      <div class="video-wrapper" id="jokeBox">
+        <video id="jokeVideo" controls playsinline>
+          <source src="joke.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <div class="to-top" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
   <script>
     const reveals = document.querySelectorAll('.reveal');
@@ -215,11 +221,7 @@
 
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        } else {
-          entry.target.classList.remove('active');
-        }
+        entry.target.classList.toggle('active', entry.isIntersecting);
       });
     }, { threshold: 0.35 });
 
@@ -229,9 +231,9 @@
       toTop.classList.toggle('show', window.scrollY > 400);
     });
 
-    function showVideo() {
-      const box = document.getElementById('videoBox');
-      const video = document.getElementById('finalVideo');
+    function showVideo(boxId, videoId) {
+      const box = document.getElementById(boxId);
+      const video = document.getElementById(videoId);
 
       box.style.display = 'block';
       video.play();
