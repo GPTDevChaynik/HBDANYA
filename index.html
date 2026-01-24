@@ -9,16 +9,18 @@
   <style>
     * { box-sizing: border-box; }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: radial-gradient(circle at top, #1b2735, #090a0f 70%);
-      color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    html {
+      background-color: #090a0f; /* 🔥 убирает белый флеш */
     }
 
     body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #1b2735, #090a0f 70%);
+      color: #fff;
       padding-top: env(safe-area-inset-top);
+      overscroll-behavior: none;
     }
 
     section {
@@ -79,7 +81,7 @@
       transform: translateY(0);
     }
 
-    /* ===== PHOTO SECTIONS ===== */
+    /* ===== PHOTO ===== */
     .bg-photo { background-size: cover; background-position: center; }
     .photo1 { background-image: url('photo1.jpg'); }
     .photo2 { background-image: url('photo2.jpg'); }
@@ -102,8 +104,8 @@
 
     video {
       width: 100%;
-      background: #000;
       border-radius: 18px;
+      background: #000;
     }
 
     button {
@@ -139,7 +141,6 @@
       transition: opacity .3s ease;
       z-index: 1200;
     }
-
     .to-top.show {
       opacity: 1;
       pointer-events: auto;
@@ -259,7 +260,7 @@
       <h2>🎬 И напоследок</h2>
       <p>Нажми — это для тебя</p>
 
-      <button onclick="showMainVideo()">▶️ Смотреть видео</button>
+      <button onclick="haptic(); showMainVideo()">▶️ Смотреть видео</button>
 
       <div class="video-wrapper" id="mainVideoBox">
         <video id="mainVideo" controls playsinline>
@@ -279,15 +280,15 @@
 
   <!-- BACK TO TOP -->
   <div class="to-top" id="toTop"
-       onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+       onclick="haptic(); window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
   <!-- HEEL -->
-  <img src="heel.png" class="heel" id="heel" onclick="showJoke()" alt="heel">
+  <img src="heel.png" class="heel" id="heel" onclick="haptic(); showJoke()" alt="heel">
 
   <!-- JOKE VIDEO -->
   <div class="joke-panel" id="jokePanel">
     <div class="joke-content">
-      <div class="close" onclick="closeJoke()">✕</div>
+      <div class="close" onclick="haptic(); closeJoke()">✕</div>
       <video id="jokeVideo" controls playsinline>
         <source src="joke.mp4" type="video/mp4">
       </video>
@@ -295,8 +296,17 @@
   </div>
 
   <script>
-    /* always start from top */
-    window.onbeforeunload = () => window.scrollTo(0, 0);
+    /* 🔥 start always from top (NO WHITE FLASH) */
+    document.addEventListener('DOMContentLoaded', () => {
+      window.scrollTo(0, 0);
+    });
+
+    /* haptic feedback */
+    function haptic() {
+      if (window.navigator.vibrate) {
+        navigator.vibrate(10);
+      }
+    }
 
     /* reveal */
     const reveals = document.querySelectorAll('.reveal');
@@ -325,6 +335,7 @@
     const end = document.getElementById('end');
     const heelObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
+        if (entry.isIntersecting) haptic();
         heel.classList.toggle('show', entry.isIntersecting);
       });
     }, { threshold: 0.6 });
@@ -332,18 +343,15 @@
 
     /* joke video */
     function showJoke() {
-      const panel = document.getElementById('jokePanel');
-      const video = document.getElementById('jokeVideo');
-      panel.classList.add('show');
-      video.play();
+      document.getElementById('jokePanel').classList.add('show');
+      document.getElementById('jokeVideo').play();
     }
 
     function closeJoke() {
-      const panel = document.getElementById('jokePanel');
       const video = document.getElementById('jokeVideo');
       video.pause();
       video.currentTime = 0;
-      panel.classList.remove('show');
+      document.getElementById('jokePanel').classList.remove('show');
     }
   </script>
 
