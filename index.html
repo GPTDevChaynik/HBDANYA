@@ -2,17 +2,23 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>С Днём рождения ✨</title>
 
   <style>
     * { box-sizing: border-box; }
 
-    body {
+    html, body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 0;
       background: radial-gradient(circle at top, #1b2735, #090a0f 70%);
       color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      padding-top: env(safe-area-inset-top);
     }
 
     section {
@@ -73,7 +79,7 @@
       transform: translateY(0);
     }
 
-    /* ===== PHOTO ===== */
+    /* ===== PHOTO SECTIONS ===== */
     .bg-photo { background-size: cover; background-position: center; }
     .photo1 { background-image: url('photo1.jpg'); }
     .photo2 { background-image: url('photo2.jpg'); }
@@ -83,6 +89,60 @@
       position: absolute;
       inset: 0;
       background: rgba(0,0,0,.55);
+    }
+
+    /* ===== VIDEO ===== */
+    .video-wrapper {
+      margin-top: 25px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,.6);
+      display: none;
+    }
+
+    video {
+      width: 100%;
+      background: #000;
+      border-radius: 18px;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 14px 28px;
+      border-radius: 30px;
+      border: none;
+      background: linear-gradient(135deg, #ffffff, #e6f0ff);
+      color: #090a0f;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    /* ===== BACK TO TOP ===== */
+    .to-top {
+      position: fixed;
+      right: 20px;
+      bottom: 90px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease;
+      z-index: 1200;
+    }
+
+    .to-top.show {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     /* ===== SECRET HEEL ===== */
@@ -133,7 +193,7 @@
 
     .joke-content {
       position: relative;
-      max-width: 320px; /* 👈 меньше */
+      max-width: 320px;
       width: 85%;
     }
 
@@ -153,17 +213,12 @@
       cursor: pointer;
       backdrop-filter: blur(6px);
     }
-
-    video {
-      width: 100%;
-      border-radius: 16px;
-      background: #000;
-    }
   </style>
 </head>
 
 <body>
 
+  <!-- INTRO -->
   <section>
     <div class="content reveal">
       <h1>✨ С Днём рождения</h1>
@@ -198,12 +253,33 @@
     </div>
   </section>
 
+  <!-- MAIN VIDEO -->
+  <section>
+    <div class="content reveal">
+      <h2>🎬 И напоследок</h2>
+      <p>Нажми — это для тебя</p>
+
+      <button onclick="showMainVideo()">▶️ Смотреть видео</button>
+
+      <div class="video-wrapper" id="mainVideoBox">
+        <video id="mainVideo" controls playsinline>
+          <source src="video.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAKE END -->
   <section id="end">
     <div class="content reveal">
       <h2>🎬 Конец</h2>
       <p>Кажется, это всё 🙂</p>
     </div>
   </section>
+
+  <!-- BACK TO TOP -->
+  <div class="to-top" id="toTop"
+       onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
   <!-- HEEL -->
   <img src="heel.png" class="heel" id="heel" onclick="showJoke()" alt="heel">
@@ -229,6 +305,21 @@
     }, { threshold: 0.35 });
     reveals.forEach(el => revealObserver.observe(el));
 
+    /* back to top */
+    const toTop = document.getElementById('toTop');
+    window.addEventListener('scroll', () => {
+      toTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    /* main video */
+    function showMainVideo() {
+      const box = document.getElementById('mainVideoBox');
+      const video = document.getElementById('mainVideo');
+      box.style.display = 'block';
+      video.play();
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
     /* heel only at bottom */
     const heel = document.getElementById('heel');
     const end = document.getElementById('end');
@@ -239,6 +330,7 @@
     }, { threshold: 0.6 });
     heelObserver.observe(end);
 
+    /* joke video */
     function showJoke() {
       const panel = document.getElementById('jokePanel');
       const video = document.getElementById('jokeVideo');
