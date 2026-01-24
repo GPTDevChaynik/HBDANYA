@@ -321,12 +321,19 @@ const heel=document.getElementById('heel');
 new IntersectionObserver(e=>heel.classList.toggle('show',e[0].isIntersecting),{threshold:.6})
 .observe(document.getElementById('end'));
 
-heel.onclick=()=>{
+heel.onclick = () => {
+  // перезапуск анимации
+  heel.classList.remove('expand');
+  void heel.offsetWidth; // 👈 хак для перезапуска CSS animation
   heel.classList.add('expand');
+
   document.getElementById('heelBackdrop').classList.add('show');
-  fadeOutMusic(()=>{
-    document.getElementById('jokePanel').classList.add('show');
-    document.getElementById('jokeVideo').play();
+
+  fadeOutMusic(() => {
+    const panel = document.getElementById('jokePanel');
+    const video = document.getElementById('jokeVideo');
+    panel.classList.add('show');
+    video.play();
   });
 };
 
