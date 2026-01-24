@@ -13,7 +13,6 @@
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: radial-gradient(circle at top, #1b2735, #090a0f 70%);
       color: #fff;
-      scroll-behavior: smooth;
     }
 
     section {
@@ -62,21 +61,18 @@
       opacity: .92;
     }
 
-    /* ===== REVEAL (APPLE STYLE) ===== */
+    /* ===== REVEAL ===== */
     .reveal {
       opacity: 0;
       transform: translateY(60px);
-      transition:
-        opacity .9s ease,
-        transform .9s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity .9s ease, transform .9s cubic-bezier(0.22,1,0.36,1);
     }
-
     .reveal.active {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ===== PHOTO SECTIONS ===== */
+    /* ===== PHOTO ===== */
     .bg-photo { background-size: cover; background-position: center; }
     .photo1 { background-image: url('photo1.jpg'); }
     .photo2 { background-image: url('photo2.jpg'); }
@@ -88,54 +84,37 @@
       background: rgba(0,0,0,.55);
     }
 
-    /* ===== VIDEO ===== */
-    .video-wrapper {
-      margin-top: 25px;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,.6);
-      display: none;
-    }
-
-    video {
-      width: 100%;
-      background: #000;
-    }
-
-    button {
-      margin-top: 25px;
-      padding: 14px 28px;
-      border-radius: 30px;
-      border: none;
-      background: linear-gradient(135deg, #ffffff, #e6f0ff);
-      color: #090a0f;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-    }
-
-    /* ===== SECRET HEEL (PASHAKLA) ===== */
+    /* ===== SECRET HEEL ===== */
     .heel {
       position: fixed;
-      bottom: -48px;              /* 👈 большая часть спрятана */
+      bottom: -55px;
       left: 50%;
       transform: translateX(-50%);
       width: 70px;
-      cursor: pointer;
       z-index: 1000;
-      transition: bottom .3s ease, transform .3s ease;
+      cursor: pointer;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition:
+        bottom .3s ease,
+        opacity .3s ease;
+    }
+
+    .heel.show {
+      opacity: 1;
+      pointer-events: auto;
       animation: tease 4s ease-in-out infinite;
     }
 
-    .heel:hover,
-    .heel:active {
-      bottom: -32px;              /* 👈 чуть вылезает */
+    .heel:hover {
+      bottom: -35px;
     }
 
     @keyframes tease {
-      0%, 100% { bottom: -48px; }
-      50% { bottom: -40px; }
+      0%,100% { bottom: -55px; }
+      50% { bottom: -45px; }
     }
 
     /* ===== JOKE PANEL ===== */
@@ -148,7 +127,7 @@
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .5s ease;
+      transition: opacity .4s ease;
       z-index: 2000;
     }
 
@@ -160,14 +139,18 @@
     .joke-content {
       max-width: 420px;
       width: 90%;
-      text-align: center;
+    }
+
+    video {
+      width: 100%;
+      border-radius: 18px;
+      background: #000;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- INTRO -->
   <section>
     <div class="content reveal">
       <h1>✨ С Днём рождения</h1>
@@ -202,34 +185,17 @@
     </div>
   </section>
 
-  <!-- MAIN VIDEO -->
-  <section>
-    <div class="content reveal">
-      <h2>🎬 И напоследок</h2>
-      <p>Нажми — это для тебя</p>
-
-      <button onclick="showMainVideo()">▶️ Смотреть видео</button>
-
-      <div class="video-wrapper" id="videoBox">
-        <video id="finalVideo" controls playsinline>
-          <source src="video.mp4" type="video/mp4">
-        </video>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAKE END -->
-  <section>
+  <section id="end">
     <div class="content reveal">
       <h2>🎬 Конец</h2>
       <p>Кажется, это всё 🙂</p>
     </div>
   </section>
 
-  <!-- SECRET HEEL -->
-  <img src="heel.png" class="heel" onclick="showJoke()" alt="heel">
+  <!-- HEEL -->
+  <img src="heel.png" class="heel" id="heel" alt="heel" onclick="showJoke()">
 
-  <!-- JOKE VIDEO -->
+  <!-- JOKE -->
   <div class="joke-panel" id="jokePanel">
     <div class="joke-content">
       <video id="jokeVideo" controls playsinline>
@@ -239,23 +205,24 @@
   </div>
 
   <script>
+    /* reveal */
     const reveals = document.querySelectorAll('.reveal');
-
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        entry.target.classList.toggle('active', entry.isIntersecting);
-      });
+      entries.forEach(e => e.target.classList.toggle('active', e.isIntersecting));
     }, { threshold: 0.35 });
-
     reveals.forEach(el => observer.observe(el));
 
-    function showMainVideo() {
-      const box = document.getElementById('videoBox');
-      const video = document.getElementById('finalVideo');
-      box.style.display = 'block';
-      video.play();
-      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    /* heel show only at bottom */
+    const heel = document.getElementById('heel');
+    const end = document.getElementById('end');
+
+    const heelObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        heel.classList.toggle('show', entry.isIntersecting);
+      });
+    }, { threshold: 0.6 });
+
+    heelObserver.observe(end);
 
     function showJoke() {
       const panel = document.getElementById('jokePanel');
